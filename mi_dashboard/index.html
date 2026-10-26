@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Unitree Telemetría</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <h1>Unitree Telemetría</h1>
+      <span id="robot-name" class="muted">—</span>
+      <span id="server-mode" class="tag">sin conexión</span>
+    </div>
+
+    <form id="conn-form" class="conn">
+      <label>API
+        <input id="api-url" type="text" spellcheck="false" autocomplete="off">
+      </label>
+      <select id="transport" aria-label="Transporte" title="Transporte de datos">
+        <option value="auto">Auto (WS → polling)</option>
+        <option value="ws">WebSocket</option>
+        <option value="poll">Polling 250 ms</option>
+      </select>
+      <button type="submit" id="btn-connect">Conectar</button>
+      <span id="conn-status" class="status status--off" title="Estado de conexión">
+        <i></i><span>desconectado</span>
+      </span>
+      <span id="rate" class="muted mono">— Hz</span>
+    </form>
+
+    <div class="capture">
+      <button id="btn-capture" type="button" title="Guarda el estado actual">Capturar</button>
+      <button id="btn-record" type="button" aria-pressed="false">● Grabar</button>
+      <button id="btn-export" type="button" disabled>Exportar CSV</button>
+      <button id="btn-clear" type="button" class="ghost" disabled>Limpiar</button>
+      <span class="muted"><b id="capture-count" class="mono">0</b> muestras</span>
+    </div>
+  </header>
+
+  <main class="grid">
+    <section class="panel panel--motors" aria-labelledby="h-motors">
+      <h2 id="h-motors">Motores <span id="motor-count" class="muted"></span></h2>
+      <div class="legend">
+        <span><i class="dot dot--ok"></i>&lt; 40 °C</span>
+        <span><i class="dot dot--warn"></i>40–60 °C</span>
+        <span><i class="dot dot--hot"></i>&gt; 60 °C</span>
+      </div>
+      <div class="table-wrap">
+        <table class="motors">
+          <thead>
+            <tr>
+              <th>#</th><th>Motor</th><th>Temp (°C)</th>
+              <th>Ángulo (°)</th><th>Vel (rad/s)</th><th>Torque (N·m)</th>
+            </tr>
+          </thead>
+          <tbody id="motors-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel panel--imu" aria-labelledby="h-imu">
+      <h2 id="h-imu">IMU</h2>
+      <div class="stats">
+        <div class="stat"><span class="stat__label">Roll</span><span id="imu-roll" class="stat__value">—</span><span class="stat__unit">°</span></div>
+        <div class="stat"><span class="stat__label">Pitch</span><span id="imu-pitch" class="stat__value">—</span><span class="stat__unit">°</span></div>
+        <div class="stat"><span class="stat__label">Yaw</span><span id="imu-yaw" class="stat__value">—</span><span class="stat__unit">°</span></div>
+      </div>
+      <div class="chart-box"><canvas id="imu-chart"></canvas></div>
+    </section>
+
+    <section class="panel panel--bms" aria-labelledby="h-bms">
+      <h2 id="h-bms">Batería (BMS)</h2>
+      <div class="soc">
+        <div class="soc__bar"><div id="bms-soc-fill" class="soc__fill"></div></div>
+        <span id="bms-soc" class="soc__value mono">— %</span>
+      </div>
+      <div class="stats">
+        <div class="stat"><span class="stat__label">Corriente</span><span id="bms-current" class="stat__value">—</span><span class="stat__unit">mA</span></div>
+        <div class="stat"><span class="stat__label">Temperatura</span><span id="bms-temp" class="stat__value">—</span><span class="stat__unit">°C</span></div>
+      </div>
+      <h3>Voltaje por celda</h3>
+      <div id="bms-cells" class="cells"></div>
+    </section>
+
+    <section class="panel panel--feet" aria-labelledby="h-feet">
+      <h2 id="h-feet">Contacto por pata</h2>
+      <div id="feet" class="feet"></div>
+      <div class="legend">
+        <span><i class="dot dot--ok"></i>apoyada</span>
+        <span><i class="dot dot--idle"></i>en el aire</span>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

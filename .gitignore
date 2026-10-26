@@ -1,0 +1,12 @@
+# Backend de la cátedra: se usa desde su propio repo (ver README)
+backend/
+
+# Material de la cátedra y accesos directos locales
+docs/consigna.pdf
+*.url
+
+__pycache__/
+*.csv
+.vscode/
+desktop.ini
+Thumbs.db
